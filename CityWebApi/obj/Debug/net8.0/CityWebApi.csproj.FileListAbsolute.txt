@@ -34,3 +34,5 @@ C:\Users\Eray\Desktop\C#Camp\WebAPIProject\web-api-starter\CityWebApi\obj\Debug\
 C:\Users\Eray\Desktop\C#Camp\WebAPIProject\web-api-starter\CityWebApi\obj\Debug\net8.0\CityWebApi.pdb
 C:\Users\Eray\Desktop\C#Camp\WebAPIProject\web-api-starter\CityWebApi\obj\Debug\net8.0\CityWebApi.genruntimeconfig.cache
 C:\Users\Eray\Desktop\C#Camp\WebAPIProject\web-api-starter\CityWebApi\obj\Debug\net8.0\ref\CityWebApi.dll
+C:\Users\Eray\Desktop\C#Camp\WebAPIProject\web-api-starter\CityWebApi\bin\Debug\net8.0\AutoMapper.dll
+C:\Users\Eray\Desktop\C#Camp\WebAPIProject\web-api-starter\CityWebApi\bin\Debug\net8.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
