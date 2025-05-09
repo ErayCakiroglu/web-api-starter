@@ -1,3 +1,4 @@
+using CityWebApi.Controllers;
 using CityWebApi.Data;
 using CityWebApi.Services.CityService;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddScoped<ICityService,CityService>();
+builder.Services.AddScoped<IAuthRepository,AuthRepository>();
 
 var app = builder.Build();
 

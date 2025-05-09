@@ -3,6 +3,7 @@ using CityWebApi.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CityWebApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20250509154528_UserMigration")]
+    partial class UserMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,15 +39,10 @@ namespace CityWebApi.Migrations
                     b.Property<int>("Population")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
                     b.Property<int>("rgbCity")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("CityEntities");
                 });
@@ -57,7 +55,7 @@ namespace CityWebApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<byte[]>("PasswordHash")
+                    b.Property<byte[]>("PasswordHast")
                         .IsRequired()
                         .HasColumnType("varbinary(max)");
 
@@ -72,20 +70,6 @@ namespace CityWebApi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("UserEntities");
-                });
-
-            modelBuilder.Entity("CityWebApi.Core.CityEntity", b =>
-                {
-                    b.HasOne("CityWebApi.Core.UserEntity", "User")
-                        .WithMany("CityEntities")
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("CityWebApi.Core.UserEntity", b =>
-                {
-                    b.Navigation("CityEntities");
                 });
 #pragma warning restore 612, 618
         }

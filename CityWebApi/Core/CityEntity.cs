@@ -8,4 +8,5 @@ public class CityEntity
     public string Name { get; set; } = "İstanbul";
     public int Population { get; set; } = 20000000;
     public RgbCity rgbCity {get; set;} = RgbCity.Marmara;
+    public UserEntity? User { get; set; }
 }
