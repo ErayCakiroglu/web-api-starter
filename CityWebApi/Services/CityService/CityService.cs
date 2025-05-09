@@ -2,29 +2,28 @@ using System;
 using AutoMapper;
 using CityWebApi.Core;
 using CityWebApi.Core.Dtos.City;
+using CityWebApi.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace CityWebApi.Services.CityService;
 
 public class CityService : ICityService
 {
-    public static List<CityEntity> cityEntities = new List<CityEntity>()
-        {
-            new CityEntity(),
-            new CityEntity{Id = 1, Name = "Trabzon"}
-        };
     private readonly IMapper _mapper;
+    private readonly DataContext _context;
 
-    public CityService(IMapper mapper)
+    public CityService(IMapper mapper, DataContext context)
     {
         _mapper = mapper;
+        _context = context;
     }
     public async Task<ServiceResponse<List<GetCity>>> AddCity(AddCity newCity)
     {
         var serviceResponse = new ServiceResponse<List<GetCity>>();
         CityEntity cityEntity = _mapper.Map<CityEntity>(newCity);
-        cityEntity.Id = cityEntities.Max(x => x.Id) + 1;
-        cityEntities.Add(cityEntity);
-        serviceResponse.Data = cityEntities.Select(x => _mapper.Map<GetCity>(x)).ToList();
+        _context.CityEntities.Add(cityEntity);
+        await _context.SaveChangesAsync();
+        serviceResponse.Data = await _context.CityEntities.Select(x => _mapper.Map<GetCity>(x)).ToListAsync();
         return serviceResponse;
     }
 
@@ -34,9 +33,10 @@ public class CityService : ICityService
 
         try
         {
-            CityEntity cityEntity = cityEntities.Find(x => x.Id == id);
-            cityEntities.Remove(cityEntity);
-            serviceResponse.Data = cityEntities.Select(x => _mapper.Map<GetCity>(x)).ToList();
+            CityEntity cityEntity = await _context.CityEntities.FirstAsync(x => x.Id == id);
+            _context.CityEntities.Remove(cityEntity);
+            await _context.SaveChangesAsync();
+            serviceResponse.Data = await _context.CityEntities.Select(x => _mapper.Map<GetCity>(x)).ToListAsync();
         }
         catch(Exception ex)
         {
@@ -48,15 +48,17 @@ public class CityService : ICityService
 
     public async Task<ServiceResponse<List<GetCity>>> GetAllCity()
     {
-        var serviceResponse = new ServiceResponse<List<GetCity>>{Data = cityEntities.Select(x => _mapper.Map<GetCity>(x)).ToList()};
+        var serviceResponse = new ServiceResponse<List<GetCity>>();
+        var dbCityEntities = await _context.CityEntities.ToListAsync();
+        serviceResponse.Data = dbCityEntities.Select(x => _mapper.Map<GetCity>(x)).ToList();
         return serviceResponse;
     }
 
     public async Task<ServiceResponse<GetCity?>> GetCityById(int id)
     {
-        var serviceResponse = new ServiceResponse<GetCity>();
-        var city = cityEntities.Find(x => x.Id == id);
-        serviceResponse.Data = _mapper.Map<GetCity>(city);
+        var serviceResponse = new ServiceResponse<GetCity?>();
+        var dbCity = await _context.CityEntities.FirstOrDefaultAsync(x => x.Id == id);
+        serviceResponse.Data = _mapper.Map<GetCity>(dbCity);
         return serviceResponse;
     }
 
@@ -66,10 +68,12 @@ public class CityService : ICityService
 
         try
         {
-            CityEntity cityEntity = cityEntities.FirstOrDefault(x => x.Id == updatedCity.Id);
+            CityEntity cityEntity = await _context.CityEntities.FirstOrDefaultAsync(x => x.Id == updatedCity.Id);
             cityEntity.Name = updatedCity.Name;
             cityEntity.Population = updatedCity.Population;
             cityEntity.rgbCity = updatedCity.rgbCity;
+
+            await _context.SaveChangesAsync();
 
             serviceResponse.Data = _mapper.Map<GetCity>(cityEntity);
         }
