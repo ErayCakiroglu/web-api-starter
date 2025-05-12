@@ -1,10 +1,12 @@
 using CityWebApi.Core;
 using CityWebApi.Core.Dtos.City;
 using CityWebApi.Services.CityService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CityWebApi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CityController : ControllerBase
